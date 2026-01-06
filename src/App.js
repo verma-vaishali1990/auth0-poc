@@ -1,26 +1,30 @@
-import React, { useEffect, useState } from "react";
-import lock from "./auth/lock";
+import React, { useEffect } from 'react';
+import lock from './auth/lock';
 
 function App() {
-  const [user, setUser] = useState(null);
 
   useEffect(() => {
-    lock.on("authenticated", (authResult) => {
-      lock.getUserInfo(authResult.accessToken, (err, profile) => {
-        if (err) {
-          console.error(err);
-          return;
-        }
-        setUser(profile);
-      });
+    // Fired after successful authentication
+    lock.on('authenticated', (authResult) => {
+      console.log('Auth Result:', authResult);
+
+      if (authResult && authResult.accessToken) {
+        console.log('Access Token:', authResult.accessToken);
+      }
+
+      if (authResult && authResult.idToken) {
+        console.log('ID Token:', authResult.idToken);
+      }
     });
 
-    lock.on("authorization_error", (err) => {
-      console.error("Auth error:", err);
+    // Handle errors
+    lock.on('authorization_error', (error) => {
+      console.error('Auth Error:', error);
     });
 
     return () => {
-      lock.off("authenticated");
+      lock.off('authenticated');
+      lock.off('authorization_error');
     };
   }, []);
 
@@ -29,19 +33,9 @@ function App() {
   };
 
   return (
-    <div style={{ padding: 40 }}>
+    <div>
       <h1>Auth0 Lock Email OTP POC</h1>
-
-      {!user ? (
-        <button onClick={login}>Login with Email OTP</button>
-      ) : (
-        <>
-          <h2>Welcome {user.email}</h2>
-          <button onClick={() => lock.logout({ returnTo: window.location.origin })}>
-            Logout
-          </button>
-        </>
-      )}
+      <button onClick={login}>Login with Email OTP</button>
     </div>
   );
 }
