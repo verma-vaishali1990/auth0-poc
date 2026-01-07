@@ -5,8 +5,7 @@ var passwordlessOptions = {
     redirect: false,
     responseType: 'token id_token',
     params: {
-      scope: 'openid email',
-      audience: 'HpAmpMF7NL6rPtWorkVSYLmrfggBU8uv'             
+      scope: 'openid email'           
     }          
   }
 }
