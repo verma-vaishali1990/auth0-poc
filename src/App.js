@@ -1,6 +1,18 @@
 import React, { useEffect } from 'react';
 import lock from './auth/lock';
 
+function callApi(accessToken) {
+  fetch('http://localhost:3000/auth/protected', {
+    method: 'GET',
+    headers: {
+      Authorization: `Bearer ${accessToken}`
+    }
+  })
+    .then(res => res.json())
+    .then(data => console.log(data))
+    .catch(err => console.error(err));
+}
+
 function App() {
 
   useEffect(() => {
@@ -10,9 +22,12 @@ function App() {
 
       if (authResult && authResult.accessToken) {
         console.log('Access Token:', authResult.accessToken);
+         // Call API with accessToken
+  callApi(authResult.accessToken);
       }
 
       if (authResult && authResult.idToken) {
+
         console.log('ID Token:', authResult.idToken);
       }
     });
